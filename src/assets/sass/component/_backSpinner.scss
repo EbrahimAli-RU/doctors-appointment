@@ -1,0 +1,13 @@
+.backspinner{
+    &_container {
+    position: absolute;
+    width: 100%;
+    min-height: 100vh;
+    background-color: rgba(#000000, .4);
+    z-index: 200;
+    }
+
+    &_content {
+        margin-top: 50%;
+    }
+}
