@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authHandler } from "../redux/auth";
 import { useDispatch } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   CALENDAR_ID,
   CLIENT_ID,
@@ -16,21 +18,31 @@ const HomePage = () => {
   const gapi = window.gapi;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const loginHandler = () => {
     gapi.auth2
       .getAuthInstance()
       .signIn()
-      .then((res) => {
-        localStorage.setItem("token", `${res.xc.access_token}`);
-        localStorage.setItem("email", `${res.Lu.Bv}`);
-        localStorage.setItem("role", "doctor");
-        dispatch(authHandler({ email: res.Lu.Bv, role: "doctor" }));
-        listUpcomingEvents(false, res.Lu.Bv, "doctor");
-      });
+      .then(
+        (res) => {
+          localStorage.setItem("token", `${res.xc.access_token}`);
+          localStorage.setItem("email", `${res.Lu.Bv}`);
+          localStorage.setItem("role", "doctor");
+          // dispatch(authHandler({ email: res.Lu.Bv, role: "doctor" }));
+          listUpcomingEvents(false, res.Lu.Bv, "doctor", res.xc.access_token);
+        },
+        function (reason) {
+          setLoading(false);
+          setError(true);
+          (() => {
+            toast(reason.result.error.message);
+          })();
+        }
+      );
   };
 
-  function listUpcomingEvents(flag, email, role) {
+  function listUpcomingEvents(flag, email, role, token) {
     setLoading(true);
     gapi.client.calendar.events
       .list({
@@ -41,60 +53,80 @@ const HomePage = () => {
         maxResults: 40,
         orderBy: "startTime",
       })
-      .then(function (response) {
-        var events = response.result.items;
-        localStorage.setItem("accessRole", response.result.accessRole);
-        if (flag) {
-          const filterEvent = [];
-          events.forEach((element) => {
-            if (element.hasOwnProperty("attendees")) {
-              for (let i = 0; i < element.attendees.length; i++) {
-                if (element.attendees[i].email === email) {
-                  filterEvent.push(element);
+      .then(
+        function (response) {
+          var events = response.result.items;
+          localStorage.setItem("accessRole", response.result.accessRole);
+          if (flag) {
+            const filterEvent = [];
+            events.forEach((element) => {
+              if (element.hasOwnProperty("attendees")) {
+                for (let i = 0; i < element.attendees.length; i++) {
+                  if (element.attendees[i].email === email) {
+                    filterEvent.push(element);
+                  }
                 }
               }
+            });
+            localStorage.setItem("events", JSON.stringify(filterEvent));
+            dispatch(
+              authHandler({
+                email: email,
+                role: role,
+                events: filterEvent,
+                token: token,
+                accessRole: response.result.accessRole,
+              })
+            );
+          } else {
+            if (response.result.accessRole === "reader") {
+              alert(`We will process you account. Please stay with Us.`);
             }
-          });
-          localStorage.setItem("events", JSON.stringify(filterEvent));
-          dispatch(
-            authHandler({
-              email: email,
-              role: role,
-              events: filterEvent,
-              accessRole: response.result.accessRole,
-            })
-          );
-        } else {
-          if (response.result.accessRole === "reader") {
-            alert(`We will process you account. Please stay with Us.`);
-          }
-          localStorage.setItem("events", JSON.stringify([]));
+            localStorage.setItem("events", JSON.stringify([]));
 
-          dispatch(
-            authHandler({
-              email: email,
-              role: role,
-              events: [],
-              accessRole: response.result.accessRole,
-            })
-          );
+            dispatch(
+              authHandler({
+                email: email,
+                role: role,
+                events: [],
+                token: token,
+                accessRole: response.result.accessRole,
+              })
+            );
+          }
+          setLoading(false);
+          navigate("/dashboard");
+        },
+        function (reason) {
+          setLoading(false);
+          setError(true);
+          (() => {
+            toast(reason.result.error.message);
+          })();
         }
-        setLoading(false);
-        navigate("/dashboard");
-      });
+      );
   }
 
   const patientLoginHandler = () => {
     gapi.auth2
       .getAuthInstance()
       .signIn()
-      .then((res) => {
-        localStorage.setItem("token", `${res.xc.access_token}`);
-        localStorage.setItem("email", `${res.Lu.Bv}`);
-        localStorage.setItem("role", "patient");
-        dispatch(authHandler({ email: res.Lu.Bv, role: "patient" }));
-        listUpcomingEvents(true, res.Lu.Bv, "patient");
-      });
+      .then(
+        (res) => {
+          localStorage.setItem("token", `${res.xc.access_token}`);
+          localStorage.setItem("email", `${res.Lu.Bv}`);
+          localStorage.setItem("role", "patient");
+          // dispatch(authHandler({ email: res.Lu.Bv, role: "patient" }));
+          listUpcomingEvents(true, res.Lu.Bv, "patient", res.xc.access_token);
+        },
+        function (reason) {
+          setLoading(false);
+          setError(true);
+          (() => {
+            toast(reason.result.error.message);
+          })();
+        }
+      );
   };
 
   useEffect(() => {
@@ -110,6 +142,7 @@ const HomePage = () => {
 
   return (
     <>
+      {error && <ToastContainer />}
       {loading && <BackSpinner />}
       <div className="home_wrapper">
         <div className="home_title_wrapper">

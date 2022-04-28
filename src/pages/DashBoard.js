@@ -3,6 +3,8 @@ import Navigation from "../layout/Navigation";
 import { CALENDAR_ID, GOOGLE_API_KEY } from "../config";
 import Patient from "../component/Patient";
 import { useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DashBoard = () => {
   const { role, email, events, accessRole } = useSelector(
@@ -10,7 +12,7 @@ const DashBoard = () => {
   );
   const [event, setEvent] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState({ error: false, message: "" });
+  const [error, setError] = useState(false);
   let gapi = window.gapi;
 
   const getEvents = () => {
@@ -28,17 +30,22 @@ const DashBoard = () => {
             ).toISOString()}&timeMax=${endofDay.toISOString()}`,
           });
         })
-        .then((res) => {
-          const events = res.result.items.filter(
-            (event) => event.creator.email === email
-          );
-          setEvent(events);
-          setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          setError({ error: true, message: "Bad Request" });
-        });
+        .then(
+          (res) => {
+            const events = res.result.items.filter(
+              (event) => event.creator.email === email
+            );
+            setEvent(events);
+            setLoading(false);
+          },
+          function (reason) {
+            setLoading(false);
+            setError(true);
+            (() => {
+              toast(reason.result.error.message);
+            })();
+          }
+        );
     };
     gapi.load("client", cb);
   };
@@ -61,9 +68,16 @@ const DashBoard = () => {
       });
       request.execute(function (response) {
         if (response.error || response === false) {
-          alert("Error");
+          setError(true);
+          (() => {
+            toast(`Error`);
+          })();
+          // alert("Error");
         } else {
-          alert("Success");
+          setError(true);
+          (() => {
+            toast(`Error`);
+          })();
           const copyEvent = [...event];
           copyEvent.splice(i, 1);
           setEvent(copyEvent);
@@ -74,6 +88,7 @@ const DashBoard = () => {
 
   return (
     <>
+      {error && <ToastContainer />}
       <Navigation />
       {role === "doctor" && (
         <Patient
