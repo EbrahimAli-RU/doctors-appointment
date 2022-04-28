@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/doctors-appointment/static/css/main.8c10a3a0.css",
+    "main.js": "/doctors-appointment/static/js/main.75ea4e26.js",
+    "static/js/787.1abfc89f.chunk.js": "/doctors-appointment/static/js/787.1abfc89f.chunk.js",
+    "index.html": "/doctors-appointment/index.html",
+    "main.8c10a3a0.css.map": "/doctors-appointment/static/css/main.8c10a3a0.css.map",
+    "main.75ea4e26.js.map": "/doctors-appointment/static/js/main.75ea4e26.js.map",
+    "787.1abfc89f.chunk.js.map": "/doctors-appointment/static/js/787.1abfc89f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8c10a3a0.css",
+    "static/js/main.75ea4e26.js"
+  ]
+}
