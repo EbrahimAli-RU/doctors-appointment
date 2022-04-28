@@ -1,0 +1,47 @@
+.card{
+    &_container {
+    width: 35rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: .4rem;
+    display: inline-block;
+    margin: 1rem;
+    padding: 1rem;
+    }
+    &_title_div {
+        p {
+            font-size: 1.8rem;
+        }
+    }
+
+    &_time_div {
+        display: flex;
+        padding: 1rem 0;
+        &_start_time {
+            margin-right: 2rem;
+        }
+    }
+
+    &_view_div {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1rem 0;
+
+        a {
+            margin-left: 1rem;
+            text-decoration: none;
+            font-size: 1.6rem;
+            padding: .8rem 2rem;
+            background-color: goldenrod;
+            border-radius: 10rem;
+            color: white;
+        }
+    }
+}
+
+.delete_btn {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    padding: .5rem 1rem;
+    font-size: 1.6rem;
+}

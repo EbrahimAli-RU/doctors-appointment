@@ -1,0 +1,52 @@
+.dashboard{
+    &_container {
+    max-width: 1500px;
+    margin: auto;
+    }
+    &_nothing_found {
+        margin-top: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    &_calender {
+        &_container {
+            margin-top: 2rem;
+            display: inline-block;
+        }
+        &_btn {
+            text-decoration: none;
+            font-size: 1.6rem;
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+            padding: 0 3.5rem;
+            border-radius: 10rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .btn-plus {
+                font-size: 3rem;
+                font-weight: bolder;
+                margin-right: 1rem;
+            }
+
+            .btn-create {
+                font-size: 1.8rem;
+                font-weight: bold;
+            }
+        }
+    }
+
+    &_upcoming_app {
+        &_title {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+    }
+
+    &_card_container {
+        margin-top: 3rem;
+    }
+}
