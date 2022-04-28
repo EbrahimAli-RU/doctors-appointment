@@ -20,5 +20,7 @@ Doctor Appointment has two type of user one is doctor and other one is patient.I
 
 ## Setup
  ### Google API Key
+  * Goto [Google Cloud Platform Console](https://console.cloud.google.com/cloud-resource-manager) and create a new project.
+  * Get inside **APIs** section and click **Library** Tab.
  
 
